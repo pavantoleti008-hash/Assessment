@@ -1,9 +1,12 @@
 package Hooks;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Properties;
 
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -17,13 +20,20 @@ import io.cucumber.java.Scenario;
 
 public class Hooks {
 	public static WebDriver driver;
+	FileInputStream fis;
+	Properties props;
+	
 	@Before
-	public void setup() {
+	public void setup() throws IOException {
+		fis=new FileInputStream("C:\\Users\\Administrator\\eclipse-workspace\\Final\\src\\test\\java\\Properties\\PropFile");
+		props=new Properties();
+		props.load(fis);
 		System.out.println("Launching Browser . . .");
 		driver=new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-		driver.get("https://jpetstore.aspectran.com/account/signonForm");
+		String url=props.getProperty("url");
+		driver.get(url);
 	}
 	@After
 	public void tearDown(Scenario scenario) throws Exception{
